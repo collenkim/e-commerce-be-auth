@@ -4,7 +4,7 @@
 - **Project Name**: e-commerce-be-auth
 - **Project Type**: Greenfield (skeleton bootstrap only, no business logic)
 - **Start Date**: 2026-07-29T23:33:26Z
-- **Current Stage**: INCEPTION - Application Design
+- **Current Stage**: OPERATIONS - placeholder (workflow complete)
 
 ## Execution Plan Summary
 - **Total Stages**: Inception remainder (Application Design, Units Generation) + Construction (per-unit Functional/NFR/Infra Design + Code Generation, Build and Test) + Operations (placeholder)
@@ -38,24 +38,27 @@
 - [x] Workspace Detection
 - [x] Reverse Engineering (skipped — greenfield)
 - [x] Requirements Analysis
-- [x] User Stories (approved — 21 stories, 4 personas, incl. US-604 product-browsing exception)
+- [x] User Stories (approved — 18 stories after 2026-07-31 gateway descope removed US-601/602/604; 4 personas)
 - [x] Workflow Planning (approved)
-- [ ] Application Design — EXECUTE (IN PROGRESS)
-- [ ] Units Generation — EXECUTE (see execution-plan.md)
+- [x] Application Design — approved (5 components; API Gateway descoped to a separate project, 2026-07-31)
+- [x] Units Generation — approved (5 units: Token, Account, SocialLogin, RateLimit, Authorization; build order Token→Account→SocialLogin→RateLimit→Authorization)
 
-### 🟢 CONSTRUCTION PHASE
-- [ ] Functional Design — EXECUTE (default, per-unit)
-- [ ] NFR Requirements — EXECUTE (default, per-unit)
-- [ ] NFR Design — EXECUTE (default, per-unit)
-- [ ] Infrastructure Design — EXECUTE (default, per-unit)
-- [ ] Code Generation — EXECUTE (always, per-unit)
-- [ ] Build and Test — EXECUTE (always)
+### 🟢 CONSTRUCTION PHASE (Per-Unit Loop)
+| Unit | Functional Design | NFR Requirements | NFR Design | Infra Design | Code Generation |
+|---|---|---|---|---|---|
+| 1. Token | [x] | [x] | [x] | [x] | [x] |
+| 2. Account | [x] | [x] | [x] | [x] | [x] |
+| 3. SocialLogin | [x] | [x] | [x] | [x] | [x] |
+| 4. RateLimit | [x] | [x] | [x] | [x] | [x] |
+| 5. Authorization | [x] | [x] | [x] | [x] | [x] |
+
+- [x] Build and Test — Success (build ✅, 116/116 unit tests ✅, real docker-compose integration testing done 2026-08-03: Scenarios 1-3 pass against live MariaDB/Redis/RabbitMQ, 3 real bugs found and fixed — see `integration-points.md`)
 
 ### 🟡 OPERATIONS PHASE
-- [ ] Operations (placeholder)
+- [ ] Operations (placeholder — not part of this workflow version)
 
 ## Current Status
-- **Lifecycle Phase**: INCEPTION
-- **Current Stage**: Application Design — starting
-- **Next Stage**: Units Generation
-- **Status**: In progress
+- **Lifecycle Phase**: OPERATIONS
+- **Current Stage**: Operations (placeholder)
+- **Next Stage**: None — this is the final stage of the current AI-DLC workflow version
+- **Status**: Complete (all INCEPTION + CONSTRUCTION stages done; OPERATIONS is a placeholder with no defined steps in this workflow version)
