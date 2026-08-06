@@ -21,7 +21,7 @@ docker-compose up --build
 
 ### 3. Configure Service Endpoint
 ```bash
-export API_URL=http://localhost:8080
+export API_URL=http://localhost:28080
 ```
 
 ## Run Integration Test Scenarios
@@ -29,7 +29,7 @@ export API_URL=http://localhost:8080
 These are manual (curl/Postman) scenarios — no automated integration-test suite exists yet (Gradle has no `integrationTest` source set configured; all current tests run under `./gradlew test`, using H2/mocks). Consider adding one if this project continues past this phase.
 
 ### Scenario 1: Account → Token (signup, verify, login, refresh, logout)
-1. `POST $API_URL/api/auth/signup` `{"email":"...", "password":"Password1"}` → expect 201. Check RabbitMQ management UI (`http://localhost:15672`, guest/guest) — no queue is bound, but publishing should not error (check `auth-service` logs for absence of `Failed to publish email event` warnings).
+1. `POST $API_URL/api/auth/signup` `{"email":"...", "password":"Password1"}` → expect 201. Check RabbitMQ management UI (`http://localhost:25673`, guest/guest) — no queue is bound, but publishing should not error (check `auth-service` logs for absence of `Failed to publish email event` warnings).
 2. Retrieve the verification token — since no email consumer exists, read it from the `email_verification_token` table directly (`docker exec` into `mariadb` or connect with a client) or add a temporary log statement.
 3. `POST $API_URL/api/auth/email/verify` `{"token": "..."}` → expect 204.
 4. `POST $API_URL/api/auth/login` → expect 200 with `accessToken`/`refreshToken`.
@@ -50,7 +50,7 @@ These are manual (curl/Postman) scenarios — no automated integration-test suit
 
 ### Scenario 4: SocialLogin (requires real OAuth2 app credentials — optional)
 Only runnable if `.env` has real `GOOGLE_CLIENT_ID`/`SECRET` (Kakao/Naver require their own developer console apps + redirect URI registration).
-1. Visit `http://localhost:8080/oauth2/authorization/google` in a browser.
+1. Visit `http://localhost:28080/oauth2/authorization/google` in a browser.
 2. Complete the Google login. Confirm redirect to `OAUTH2_FRONTEND_REDIRECT_URI` with `#access_token=...&refresh_token=...` in the URL fragment.
 3. Repeat login with the same Google account with an email that also has a local password account — confirm redirect instead contains `#linkRequired=true&linkToken=...`, and that `POST /api/auth/social/link/confirm` with the correct password completes the link.
 

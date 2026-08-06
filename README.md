@@ -57,14 +57,14 @@ cp .env.example .env
 docker compose up --build
 ```
 
-`auth-service`(포트 8080), `mariadb`, `redis`, `rabbitmq`(관리 UI: `http://localhost:15672`, guest/guest)가 함께 기동됩니다. 카카오/네이버/구글 로그인은 실제 OAuth2 앱 자격증명을 `.env`에 채우기 전까지는 동작하지 않지만, 그 외 모든 기능은 정상 동작합니다.
+`auth-service`(포트 28080), `mariadb`(23306), `redis`(26379), `rabbitmq`(5672→25672, 관리 UI: `http://localhost:25673`, guest/guest)가 함께 기동됩니다. 카카오/네이버/구글 로그인은 실제 OAuth2 앱 자격증명을 `.env`에 채우기 전까지는 동작하지 않지만, 그 외 모든 기능은 정상 동작합니다. (포트는 기본값이 아닌, `e-commerce-be-product`와 겹치지 않는 값으로 지정되어 있습니다.)
 
 ### API 문서 (Swagger UI)
 
 애플리케이션이 기동되면 인증 없이 바로 확인할 수 있습니다.
 
-- **Swagger UI**: `http://localhost:8080/swagger-ui/index.html` — 브라우저에서 각 API를 직접 호출/테스트할 수 있습니다. 보호된 엔드포인트는 우측 상단 `Authorize` 버튼에 `Bearer <accessToken>`을 입력하면 됩니다.
-- **OpenAPI 스펙(JSON)**: `http://localhost:8080/v3/api-docs`
+- **Swagger UI**: `http://localhost:28080/swagger-ui/index.html` — 브라우저에서 각 API를 직접 호출/테스트할 수 있습니다. 보호된 엔드포인트는 우측 상단 `Authorize` 버튼에 `Bearer <accessToken>`을 입력하면 됩니다.
+- **OpenAPI 스펙(JSON)**: `http://localhost:28080/v3/api-docs`
 
 ### 빌드 및 테스트만 실행
 
@@ -81,7 +81,7 @@ docker compose up --build
 
 ```bash
 # 1. 회원가입
-curl -X POST http://localhost:8080/api/auth/signup \
+curl -X POST http://localhost:28080/api/auth/signup \
   -H "Content-Type: application/json" \
   -d '{"email":"test@example.com","password":"Password1"}'
 
@@ -89,15 +89,15 @@ curl -X POST http://localhost:8080/api/auth/signup \
 docker exec -it e-commerce-be-auth-mariadb-1 \
   mariadb -uauth_service -p"$DB_PASSWORD" auth_service \
   -e "SELECT token_hash FROM email_verification_token ORDER BY expires_at DESC LIMIT 1;"
-# (해시만 저장되므로 실제 원문 토큰은 RabbitMQ에 발행된 이메일 이벤트에서 확인 - 관리 UI http://localhost:15672)
+# (해시만 저장되므로 실제 원문 토큰은 RabbitMQ에 발행된 이메일 이벤트에서 확인 - 관리 UI http://localhost:25673)
 
 # 3. 로그인 → accessToken/refreshToken 발급
-curl -X POST http://localhost:8080/api/auth/login \
+curl -X POST http://localhost:28080/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"test@example.com","password":"Password1"}'
 
 # 4. 발급받은 accessToken으로 보호된 API 호출
-curl -X POST http://localhost:8080/internal/tokens/validate \
+curl -X POST http://localhost:28080/internal/tokens/validate \
   -H "Content-Type: application/json" \
   -d '{"accessToken":"<위에서 받은 accessToken>"}'
 ```
